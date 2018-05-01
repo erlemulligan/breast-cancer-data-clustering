@@ -1,4 +1,4 @@
-dataSource <- 'http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/breast-cancer-wisconsin.data'
+dataSource <- 'http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data'
 dataFilePath <- './data/cancer.data'
 dataDirectoryPath <- './data'
 

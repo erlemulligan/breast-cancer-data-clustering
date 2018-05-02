@@ -11,3 +11,10 @@ if (!file.exists(dataFilePath)) {
 }
 
 cancer.data <- read.csv(dataFilePath, fileEncoding = "UTF-8", header = F)
+
+
+library(kernlab)
+
+clusteringdata <- as.matrix(cancer.data[,3:32])
+
+specc(clusteringdata,2)

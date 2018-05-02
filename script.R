@@ -17,4 +17,7 @@ library(kernlab)
 
 clusteringdata <- as.matrix(cancer.data[,3:32])
 
-specc(clusteringdata,2)
+specc1 <- specc(clusteringdata,2)
+
+typeof(specc1)
+plot(clusteringdata, col=specc1, main="breast cancer clusters")

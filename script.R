@@ -19,5 +19,8 @@ clusteringdata <- as.matrix(cancer.data[,3:32])
 
 specc1 <- specc(clusteringdata,2)
 
-typeof(specc1)
+par(mfrow=c(1,2))
 plot(clusteringdata, col=specc1, main="breast cancer clusters")
+
+plot(cancer.data$V3,cancer.data$V4, col=c("red","black")[cancer.data$V2], main="Actual Clusters")
+legend("topright",pch=c(1,1), col=c("red", "black"),legend=c("Benign","Malignant"))

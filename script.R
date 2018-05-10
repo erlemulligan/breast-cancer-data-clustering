@@ -99,6 +99,9 @@ specc1.P.Values <- vector(mode="double",length=n)
 specc1.Accuracies <- vector(mode="double",length=n)
 specc2.P.Values <- vector(mode="double",length=n)
 specc3.P.Values <- vector(mode="double",length=n)
+kmeans1.P.Values <- vector(mode="double",length=n)
+kmeans1.Accuracies <- vector(mode="double",length=n)
+kmeans2.P.Values <- vector(mode="double",length=n)
 
 for(x in 1:n) {
   
@@ -109,27 +112,47 @@ for(x in 1:n) {
   specc1 <- specc(clusteringdatasample1,2)
   specc2 <- specc(clusteringdatasample1,3)
   specc3 <- specc(clusteringdatasample1,4)
-  #hypothesis test with confusion matrix
-  multn.test1 <- mod_multinomial.test(size(specc1),c(.5,.5))
-  multn.test2 <- mod_multinomial.test(size(specc2),c(1/3,1/3,1/3))
-  multn.test3 <- mod_multinomial.test(size(specc3),c(.25,.25,.25,.25))
-  specc1.P.Values[x] <- multn.test1
-  specc2.P.Values[x] <- multn.test2
-  specc3.P.Values[x] <- multn.test3
   
-  confMatrix <- confusionMatrix(factor(specc1@.Data),cancer.data.sample1$diagnosis)
-  specc1.Accuracies[x] <- confMatrix$overall['Accuracy']
+  kmeans1 <- kmeans(clusteringdatasample1,2)
+  kmeans2 <- kmeans(clusteringdatasample1,3)
+  
+  #hypothesis test with confusion matrix
+  specc.multn.test1 <- mod_multinomial.test(size(specc1),c(.5,.5))
+  specc.multn.test2 <- mod_multinomial.test(size(specc2),c(1/3,1/3,1/3))
+  specc.multn.test3 <- mod_multinomial.test(size(specc3),c(.25,.25,.25,.25))
+  specc1.P.Values[x] <- specc.multn.test1
+  specc2.P.Values[x] <- specc.multn.test2
+  specc3.P.Values[x] <- specc.multn.test3
+  
+  kmeans.multn.test1 <- mod_multinomial.test(kmeans1$size,c(.5,.5))
+  kmeans.multn.test2 <- mod_multinomial.test(kmeans2$size,c(1/3,1/3,1/3))
+  kmeans1.P.Values[x] <- kmeans.multn.test1
+  kmeans2.P.Values[x] <- kmeans.multn.test2
+  
+  specc.confMatrix <- confusionMatrix(factor(specc1@.Data),cancer.data.sample1$diagnosis)
+  specc1.Accuracies[x] <- specc.confMatrix$overall['Accuracy']
+  
+  kmeans.confMatrix <- confusionMatrix(factor(kmeans1$cluster),cancer.data.sample1$diagnosis)
+  kmeans1.Accuracies[x] <- kmeans.confMatrix$overall['Accuracy']
   
 }
+
+kmeans1.p.value <- mean(kmeans1.P.Values)
+kmeans2.p.value <- mean(kmeans2.P.Values)
+kmeans3.p.value <- mean(kmeans3.P.Values)
+kmeans1.Accuracy <- mean(kmeans1.Accuracies)
+print(paste0("kmeans with k=2 p-value: ",kmeans1.p.value))
+print(paste0("kmeans with k=3 p-value: ",kmeans2.p.value))
+print(paste0("kmeans with k=2 accuracy: ",kmeans1.Accuracy))
 
 specc1.p.value <- mean(specc1.P.Values)
 specc2.p.value <- mean(specc2.P.Values)
 specc3.p.value <- mean(specc3.P.Values)
 specc1.Accuracy <- mean(specc1.Accuracies)
-print(specc1.p.value)
-print(specc2.p.value)
-print(specc3.p.value)
-print(specc1.Accuracy)
+print(paste0("spectral with k=2 p-value: ",specc1.p.value))
+print(paste0("spectral with k=3 p-value: ",specc2.p.value))
+print(paste0("spectral with k=4 p-value: ",specc3.p.value))
+print(paste0("spectral with k=2 accuracy: ",specc1.Accuracy))
 
 specc1 <- specc(clusteringdata,2)
 par(mfrow=c(1,2))

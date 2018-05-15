@@ -72,10 +72,10 @@ cancerClusteringData <- as.matrix(cancerData[,3:32])
 
 ### CREATE TEST DATA SAMPLE ###
 # set seed for random sample
-set.seed(123)
+set.seed(124)
 
 # sample size of random sample
-testSampleSize = 150
+testSampleSize = 569
 
 # generate random indices from cancer data set 
 testSampleDataIndex <- sample(1:nrow(cancerData), testSampleSize)

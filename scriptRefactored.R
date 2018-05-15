@@ -151,7 +151,7 @@ kmedoidsCluster3.pValue <- xmulti(kmedoidsCluster3$clusinfo[,1], expectedValues3
 clustering.pValues <- c(spectralCluster2.pValue$pProb, kmeansCluster2.pValue$pProb, kmedoidsCluster2.pValue$pProb)
 clustering.accuracy <- c(spectralCluster2.accuracy, kmeansCluster2.accuracy, kmedoidsCluster2.accuracy)
 clustering.rowNames <- c('spectral', 'kmeans', 'kmedoids')
-clustering.colNames <- c('p-value', 'accuracy')
+clustering.colNames <- c('accuracy', 'p-value')
 
 clusteringCompareTable <- as.data.frame(as.table(setNames(clustering.pValues, clustering.accuracy)))
 colnames(clusteringCompareTable) <- clustering.colNames

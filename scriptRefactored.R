@@ -75,7 +75,7 @@ cancerClusteringData <- as.matrix(cancerData[,3:32])
 set.seed(123)
 
 # sample size of random sample
-testSampleSize = 25
+testSampleSize = 150
 
 # generate random indices from cancer data set 
 testSampleDataIndex <- sample(1:nrow(cancerData), testSampleSize)
@@ -99,16 +99,18 @@ expectedValues3Cluster <- c(1/3, 1/3, 1/3)
 # spectral clustering with 2 clusters (2 centers)
 spectralCluster2 <- specc(testClusteringData, 2)
 # exact multinomial test
-spectralCluster2.pValue <- xmulti(size(spectralCluster2), expectedValues2Cluster)
+spectralCluster2.test <- xmulti(size(spectralCluster2), expectedValues2Cluster)
 # confusion matrix
 spectralCluster2.confusionMatrix <- confusionMatrix(factor(spectralCluster2@.Data), testSampleData$diagnosis)
+# p-value
+spectralCluster2.pValue <- spectralCluster2.confusionMatrix$overall['AccuracyPValue']
 # accuracy
 spectralCluster2.accuracy <- spectralCluster2.confusionMatrix$overall['Accuracy']
 
 # spectral clustering with 3 clusters (3 centers)
 spectralCluster3 <- specc(testClusteringData, 3)
 # exact multinomial test
-spectralCluster3.pValue <- xmulti(size(spectralCluster3), expectedValues3Cluster)
+spectralCluster3.test <- xmulti(size(spectralCluster3), expectedValues3Cluster)
 ### END OF SPECTRAL CLUSTERING ON TEST DATA ###
 
 ###
@@ -117,16 +119,18 @@ spectralCluster3.pValue <- xmulti(size(spectralCluster3), expectedValues3Cluster
 # kmeans clustering with 2 clusters
 kmeansCluster2 <- kmeans(testClusteringData, 2)
 # exact multinomial test
-kmeansCluster2.pValue <- xmulti(kmeansCluster2$size, expectedValues2Cluster) 
+kmeansCluster2.test <- xmulti(kmeansCluster2$size, expectedValues2Cluster) 
 # confusion matrix
 kmeansCluster2.confusionMatrix <- confusionMatrix(factor(kmeansCluster2$cluster), testSampleData$diagnosis)
+# p-value
+kmeansCluster2.pValue <- kmeansCluster2.confusionMatrix$overall['AccuracyPValue']
 # accuracy
 kmeansCluster2.accuracy <- kmeansCluster2.confusionMatrix$overall['Accuracy']
 
 # kmeans clustering with 3 clusters
 kmeansCluster3 <- kmeans(testClusteringData, 3)
 # exact multinomial test
-kmeansCluster3.pValue <- xmulti(kmeansCluster3$size, expectedValues3Cluster)
+kmeansCluster3.test <- xmulti(kmeansCluster3$size, expectedValues3Cluster)
 ### END OF KMEANS CLUSTERING ON TEST DATA ###
 
 ###
@@ -135,20 +139,22 @@ kmeansCluster3.pValue <- xmulti(kmeansCluster3$size, expectedValues3Cluster)
 # kmedoids clustering with 2 clusters
 kmedoidsCluster2 <- pam(testClusteringData, 2)
 # exact multinomial test
-kmedoidsCluster2.pValue <- xmulti(kmedoidsCluster2$clusinfo[,1], expectedValues2Cluster)
+kmedoidsCluster2.test <- xmulti(kmedoidsCluster2$clusinfo[,1], expectedValues2Cluster)
 # confusion matrix
 kmedoidsCluster2.confusionMatrix <- confusionMatrix(factor(kmedoidsCluster2$cluster), testSampleData$diagnosis)
+# p-value
+kmedoidsCluster2.pValue <- kmedoidsCluster2.confusionMatrix$overall['AccuracyPValue']
 # accuracy
 kmedoidsCluster2.accuracy <- kmedoidsCluster2.confusionMatrix$overall['Accuracy']
 
 # kmedoids clustering with 3 clusters
 kmedoidsCluster3 <- pam(testClusteringData, 3)
 # exact multinomial test
-kmedoidsCluster3.pValue <- xmulti(kmedoidsCluster3$clusinfo[,1], expectedValues3Cluster)
+kmedoidsCluster3.test <- xmulti(kmedoidsCluster3$clusinfo[,1], expectedValues3Cluster)
 ### END OF KMEDOIDS CLUSTERING ON TEST DATA ###
 
 # compare p values and accuracy of clustering methods
-clustering.pValues <- c(spectralCluster2.pValue$pProb, kmeansCluster2.pValue$pProb, kmedoidsCluster2.pValue$pProb)
+clustering.pValues <- c(spectralCluster2.pValue, kmeansCluster2.pValue, kmedoidsCluster2.pValue)
 clustering.accuracy <- c(spectralCluster2.accuracy, kmeansCluster2.accuracy, kmedoidsCluster2.accuracy)
 clustering.rowNames <- c('spectral', 'kmeans', 'kmedoids')
 clustering.colNames <- c('accuracy', 'p-value')
